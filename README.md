@@ -23,6 +23,8 @@ SERVICE-PLAN=panintelligenceServicePlan
 DATABASE-NAME=panintelligence
 APP-NAME=panintelligence
 PANINTELLIGENCELICENCE=<paste your licence here>
+DATABASEUSERNAME=panintelligence
+DATBASEPASSWORD=5up3r53cur3P455w0rd!
 ```
 
 Next we're going to download our sample compose scripts from the panintelligence public github
@@ -55,9 +57,11 @@ az appservice plan create --name $SERVICEPLAN -- resource-group $RESOURCEGROUP -
 This will create a mariadb for the 
 
 ```powershell
-az mariadb server create --resource-group $RESOURCEGROUP --name $DATABASENAME --location $LOCATION --admin-user adminuser --admin-password My5up3rStr0ngPaSw0rd! --sku-name B_Gen5_1 --version 10.3
+az mariadb server create --resource-group $RESOURCEGROUP --name $DATABASENAME --location $LOCATION --admin-user $DATABASEUSERNAME --admin-password $DATABASEPASSWORD --sku-name B_Gen5_1 --version 10.3
 
 az mariadb server firewall-rule create --name allAzureIPs --server $DATABASENAME --resource-group $RESOURCEGROUP --start-ip-address 0.0.0.0 --end-ip-address 0.0.0.0
+
+DATABASEHOST$(az mariadb server list --query "[?name=='test-containers'].fullyQualifiedDomainName" --output tsv)
 ```
 
 |sku|Cost (Hour)|Cost (Month)|recommended|
