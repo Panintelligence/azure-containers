@@ -1,0 +1,57 @@
+version: '3'
+services:
+  server:
+    stdin_open: true
+    tty: true
+    container_name: server
+    image: panintelligence/server:latest
+    ports:
+      - "80:8224"
+    expose:
+      - "8224"
+    volumes:
+      - ${WEBAPP_STORAGE_HOME}/panintelligencekeys:/var/panintelligence/Dashboard/keys
+    environment:
+      - PI_DB_HOST=${DATABASEHOST}
+      - PI_DB_PORT=3306
+      - PI_DB_USERNAME=${DATABASEUSERNAME}@${DATABASEHOST}
+      - PI_DB_PASSWORD=${DATABASEPASSWORD}
+      - PI_EXTERNAL_DB=true
+      - PI_LICENCE=${PANINTELLIGENCELICENCE}
+  renderer:
+    tty: true
+    container_name: renderer
+    image: panintelligence/renderer:latest
+    expose:
+      - "9915"
+    environment:
+      - RENDERER_LOG_LEVELS="error,info,warn,debug,verbose"
+  scheduler:
+    tty: true
+    container_name: scheduler
+    image: panintelligence/scheduler:latest
+    expose:
+      - "9917"
+    volumes:
+      - ${WEBAPP_STORAGE_HOME}/panintelligencekeys:/var/panintelligence/Dashboard/keys
+    environment:
+      - PI_DB_HOST=${DATABASEHOST}
+      - PI_DB_PORT=3306
+      - PI_DB_USERNAME=${DATABASEUSERNAME}@${DATABASEHOST}
+      - PI_DB_PASSWORD=${DATABASEPASSWORD}
+      - PI_EXTERNAL_DB=true
+    depends_on:
+      - server
+  pirana:
+    tty: true
+    container_name: pirana
+    image: panintelligence/pirana:latest
+    expose:
+      - "9918"
+  excel-reader:
+    stdin_open: true
+    tty: true
+    container_name: excel-reader
+    image: panintelligence/excel-reader:latest
+    expose:
+      - "9916"
