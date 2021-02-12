@@ -61,7 +61,7 @@ az mariadb server create --resource-group $RESOURCEGROUP --name $DATABASENAME --
 
 az mariadb server firewall-rule create --name allAzureIPs --server $DATABASENAME --resource-group $RESOURCEGROUP --start-ip-address 0.0.0.0 --end-ip-address 0.0.0.0
 
-DATABASEHOST$(az mariadb server list --query "[?name=='test-containers'].fullyQualifiedDomainName" --output tsv)
+DATABASEHOST$(az mariadb server list --query "[?name=='$DATABASENAME'].fullyQualifiedDomainName" --output tsv)
 ```
 
 |sku|Cost (Hour)|Cost (Month)|recommended|
