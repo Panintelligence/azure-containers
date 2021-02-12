@@ -17,11 +17,11 @@ cd panintelligence
 ### Setting Environment Variables
 
 ```powershell
-RESOURCE-GROUP=panintelligence
+RESOURCEGROUP=panintelligence
 LOCATION="UK South"
-SERVICE-PLAN=panintelligenceServicePlan
-DATABASE-NAME=panintelligence
-APP-NAME=panintelligence
+SERVICEPLAN=panintelligenceServicePlan
+DATABASENAME=panintelligence
+APPNAME=panintelligence
 PANINTELLIGENCELICENCE=<paste your licence here>
 DATABASEUSERNAME=panintelligence
 DATBASEPASSWORD=5up3r53cur3P455w0rd!
