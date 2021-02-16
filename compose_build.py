@@ -30,6 +30,7 @@ with open(source_path, 'r') as source_file:
     template = source_file.read()
 
 formatter = MyFormatter()    
+
 output = formatter.format(template, DATABASEHOST=cli_args.host, DATABASEUSERNAME=cli_args.username, DATABASEPASSWORD=cli_args.password, PANINTELLIGENCELICENCE=cli_args.licence)
 
 target_path = os.path.join(path, cli_args.target)
