@@ -12,12 +12,12 @@ services:
     volumes:
       - ${WEBAPP_STORAGE_HOME}/panintelligencekeys:/var/panintelligence/Dashboard/keys
     environment:
-      - PI_DB_HOST=${DATABASEHOST}
+      - PI_DB_HOST={DATABASEHOST}
       - PI_DB_PORT=3306
-      - PI_DB_USERNAME=${DATABASEUSERNAME}@${DATABASEHOST}
-      - PI_DB_PASSWORD=${DATABASEPASSWORD}
+      - PI_DB_USERNAME={DATABASEUSERNAME}@{DATABASEHOST}
+      - PI_DB_PASSWORD={DATABASEPASSWORD}
       - PI_EXTERNAL_DB=true
-      - PI_LICENCE=${PANINTELLIGENCELICENCE}
+      - PI_LICENCE={PANINTELLIGENCELICENCE}
   renderer:
     tty: true
     container_name: renderer
@@ -35,10 +35,10 @@ services:
     volumes:
       - ${WEBAPP_STORAGE_HOME}/panintelligencekeys:/var/panintelligence/Dashboard/keys
     environment:
-      - PI_DB_HOST=${DATABASEHOST}
+      - PI_DB_HOST={DATABASEHOST}
       - PI_DB_PORT=3306
-      - PI_DB_USERNAME=${DATABASEUSERNAME}@${DATABASEHOST}
-      - PI_DB_PASSWORD=${DATABASEPASSWORD}
+      - PI_DB_USERNAME={DATABASEUSERNAME}@${DATABASEHOST}
+      - PI_DB_PASSWORD={DATABASEPASSWORD}
       - PI_EXTERNAL_DB=true
     depends_on:
       - server

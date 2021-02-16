@@ -9,42 +9,48 @@
 
 Please run the following commands in cloud shell on azure.
 
-```powershell
+```bash
 mkdir panintelligence
 cd panintelligence
 ```
 
 ### Setting Environment Variables
 
-```powershell
+```bash
 RESOURCEGROUP=panintelligence
-LOCATION="UK South"
+LOCATION="uksouth"
 SERVICEPLAN=panintelligenceServicePlan
 DATABASENAME=panintelligence
 APPNAME=panintelligence
-PANINTELLIGENCELICENCE=<paste your licence here>
 DATABASEUSERNAME=panintelligence
-DATBASEPASSWORD=5up3r53cur3P455w0rd!
+DATABASEPASSWORD=5up3r53cur3P455w0rd!
+DOCKERURL=https://docker.io
+DOCKERUSER=<Your docker username>
+DOCKERPASSWORD=<Your docker password>
+PANINTELLIGENCELICENCE=<paste your licence here>
 ```
 
 Next we're going to download our sample compose scripts from the panintelligence public github
 
-```powershell
-git clone https://github.com/panintelligencedev/azure-containers
+```bash
+git clone https://github.com/Panintelligence/azure-containers.git
 
 cd azure-containers
+
 ```
 
 ## Create a resource group
 
-```powershell
-az group create --name $RESOURCEGROUP --location LOCATION
+```bash
+az group create --name $RESOURCEGROUP --location $LOCATION
+
 ```
 
 ## Create an Azure Service Plan
 
-```powershell
-az appservice plan create --name $SERVICEPLAN -- resource-group $RESOURCEGROUP ---sku B3 --is-linux
+```bash
+az appservice plan create --name $SERVICEPLAN --resource-group $RESOURCEGROUP --sku B3 --is-linux
+
 ```
 |sku|Cost (Hour)|Cost (Month)|reccomended|
 |--|--|--|--|
@@ -56,12 +62,18 @@ az appservice plan create --name $SERVICEPLAN -- resource-group $RESOURCEGROUP -
 
 This will create a mariadb for the 
 
-```powershell
+```bash
 az mariadb server create --resource-group $RESOURCEGROUP --name $DATABASENAME --location $LOCATION --admin-user $DATABASEUSERNAME --admin-password $DATABASEPASSWORD --sku-name B_Gen5_1 --version 10.3
 
 az mariadb server firewall-rule create --name allAzureIPs --server $DATABASENAME --resource-group $RESOURCEGROUP --start-ip-address 0.0.0.0 --end-ip-address 0.0.0.0
 
-DATABASEHOST$(az mariadb server list --query "[?name=='$DATABASENAME'].fullyQualifiedDomainName" --output tsv)
+az mariadb server update --resource-group $RESOURCEGROUP --name $DATABASENAME --ssl-enforcement Disabled
+
+DATABASEHOST=$(az mariadb server list --query "[?name=='$DATABASENAME'].fullyQualifiedDomainName" --output tsv)
+
+az mariadb server configuration set --resource-group $RESOURCEGROUP --server $DATABASENAME --name lower_case_table_names --value 1
+az mariadb server configuration set --resource-group $RESOURCEGROUP --server $DATABASENAME --name sql_mode --value NO_AUTO_VALUE_ON_ZERO
+az mariadb server configuration set --resource-group $RESOURCEGROUP --server $DATABASENAME --name log_bin_trust_function_creators --value ON
 ```
 
 |sku|Cost (Hour)|Cost (Month)|recommended|
@@ -71,9 +83,20 @@ DATABASEHOST$(az mariadb server list --query "[?name=='$DATABASENAME'].fullyQual
 
 ## Create a Docker Compose App
 
-```powershell
-az webapp create --resource-group $RESOURCEGROUP --plan $SERVICEPLAN --name $APPNAME --multicontainer-config-file docker-compose-panintelligence-separates.yml
+```bash
+python3 compose_build.py --host $DATABASEHOST --username $DATABASEUSERNAME --password $DATABASEPASSWORD --licence $PANINTELLIGENCELICENCE
 
+az webapp create --resource-group $RESOURCEGROUP --plan $SERVICEPLAN --name $APPNAME --multicontainer-config-type COMPOSE --multicontainer-config-file docker-compose-panintelligence-separates.yml --docker-registry-server-user $DOCKERUSER --docker-registry-server-password $DOCKERPASSWORD
+
+az webapp config appsettings set --name $APPNAME --resource-group $RESOURCEGROUP --settings WEBSITES_ENABLE_APP_SERVICE_STORAGE=true
+az webapp config appsettings set --name $APPNAME --resource-group $RESOURCEGROUP --settings WEBSITES_CONTAINER_START_TIME_LIMIT=300
+az webapp config container set --docker-registry-server-url $DOCKERURL --docker-registry-server-password $DOCKERPASSWORD --docker-registry-server-user $DOCKERUSER --name $APPNAME --resource-group $RESOURCEGROUP
+```
+
+Finally we're going to increase the logging level of the web application.
+
+```bash
+az webapp log config --docker-container-logging filesystem --name $APPNAME --resource-group $RESOURCEGROUP
 ```
 
 # Cleaning up
@@ -85,10 +108,12 @@ When you've finished with your demonstration, You will want to clean up your env
 
 ```bash
 
-az mariadb delete --name $DATABASENAME --resource-group $RESOURCEGROUP
+az mariadb server delete --name $DATABASENAME --resource-group $RESOURCEGROUP
 
 az webapp delete --name $APPNAME --resource-group $RESOURCEGROUP 
 
 az appservice plan delete --name $SERVICEPLAN --resource-group $RESOURCEGROUP
+
+az group delete --name $RESOURCEGROUP
 
 ```
