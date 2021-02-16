@@ -2,8 +2,6 @@ import os
 import argparse
 import string
 
-template = ""
-
 parser = argparse.ArgumentParser(description="Generate Panintelligence docker-compose.yml script")
 
 parser.add_argument('--template', dest='template', default='panintelligence-separarates-template.yml')
@@ -20,21 +18,21 @@ class MyFormatter(string.Formatter):
     def get_value(self, key, args, kwds):
         if isinstance(key, str):
             return kwds.get(key, self.default.format(key))
-        else:
-            return string.Formatter.get_value(key, args, kwds)
+        
+        return string.Formatter.get_value(key, args, kwds)
 
-args = parser.parse_args()
+cli_args = parser.parse_args()
 
 path = os.path.abspath(os.path.dirname(__file__))
-source_path = os.path.join(path, args.template)
+source_path = os.path.join(path, cli_args.template)
 
 with open(source_path, 'r') as source_file:
     template = source_file.read()
 
 formatter = MyFormatter()    
-output = formatter.format(template, DATABASEHOST=args.host, DATABASEUSERNAME=args.username, DATABASEPASSWORD=args.password)
+output = formatter.format(template, DATABASEHOST=cli_args.host, DATABASEUSERNAME=cli_args.username, DATABASEPASSWORD=cli_args.password)
 
-target_path = os.path.join(path, args.target)
+target_path = os.path.join(path, cli_args.target)
 
 with open(target_path, 'w') as target_file:
     target_file.write(output)
