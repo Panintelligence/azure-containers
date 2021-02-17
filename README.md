@@ -72,7 +72,7 @@ az mariadb server update --resource-group $RESOURCEGROUP --name $DATABASENAME --
 DATABASEHOST=$(az mariadb server list --query "[?name=='$DATABASENAME'].fullyQualifiedDomainName" --output tsv)
 
 az mariadb server configuration set --resource-group $RESOURCEGROUP --server $DATABASENAME --name lower_case_table_names --value 1
-az mariadb server configuration set --resource-group $RESOURCEGROUP --server $DATABASENAME --name sql_mode --value NO_AUTO_VALUE_ON_ZERO
+az mariadb server configuration set --resource-group $RESOURCEGROUP --server $DATABASENAME --name sql_mode --value ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_AUTO_VALUE_ON_ZERO,NO_ENGINE_SUBSTITUTION,STRICT_TRANS_TABLES
 az mariadb server configuration set --resource-group $RESOURCEGROUP --server $DATABASENAME --name log_bin_trust_function_creators --value ON
 ```
 
