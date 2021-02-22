@@ -7,7 +7,7 @@
 
 ## Instructions
 
-Please run the following commands in cloud shell on azure.
+Please run the following commands in cloud shell (bash) on azure.
 
 ```bash
 mkdir panintelligence
@@ -20,8 +20,8 @@ cd panintelligence
 RESOURCEGROUP=panintelligence
 LOCATION="uksouth"
 SERVICEPLAN=panintelligenceServicePlan
-DATABASENAME=panintelligence
-APPNAME=panintelligence
+DATABASENAME=<unique_database_name>
+APPNAME=<unique_app_name>
 DATABASEUSERNAME=panintelligence
 DATABASEPASSWORD=5up3r53cur3P455w0rd!
 DOCKERURL=https://docker.io
