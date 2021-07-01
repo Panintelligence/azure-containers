@@ -18,6 +18,9 @@ cd panintelligence
 
 ```bash
 RESOURCEGROUP=panintelligence
+STORAGEACCOUNT=panintelligence1
+STORAGESHARENAME=themes
+THEMESSTORAGENAME=themes
 LOCATION="uksouth"
 SERVICEPLAN=panintelligenceServicePlan
 DATABASENAME=<unique_database_name>
@@ -28,6 +31,7 @@ DOCKERURL=https://docker.io
 DOCKERUSER=<Your docker username>
 DOCKERPASSWORD=<Your docker password>
 PANINTELLIGENCELICENCE=<paste your licence here>
+CUSTOMID=$(openssl rand -base64 32)
 ```
 
 Next we're going to download our sample compose scripts from the panintelligence public github
@@ -44,6 +48,19 @@ cd azure-containers
 ```bash
 az group create --name $RESOURCEGROUP --location $LOCATION
 
+```
+
+## Create a Storage account
+
+```bash
+az storage account create --resource-group $RESOURCEGROUP --name $STORAGEACCOUNT --location $LOCATION
+STORAGEKEY=$(az storage account keys list --resource-group $RESOURCEGROUP --account-name $STORAGEACCOUNT --query "[0].value" --output tsv)
+```
+
+## Create a share volume
+
+```bash
+az storage share create --name $STORAGESHARENAME --account-name $STORAGEACCOUNT --account-key $STORAGEKEY
 ```
 
 ## Create an Azure Service Plan
@@ -91,6 +108,7 @@ az webapp create --resource-group $RESOURCEGROUP --plan $SERVICEPLAN --name $APP
 az webapp config appsettings set --name $APPNAME --resource-group $RESOURCEGROUP --settings WEBSITES_ENABLE_APP_SERVICE_STORAGE=true
 az webapp config appsettings set --name $APPNAME --resource-group $RESOURCEGROUP --settings WEBSITES_CONTAINER_START_TIME_LIMIT=300
 az webapp config container set --docker-registry-server-url $DOCKERURL --docker-registry-server-password $DOCKERPASSWORD --docker-registry-server-user $DOCKERUSER --name $APPNAME --resource-group $RESOURCEGROUP
+az webapp config storage-account add --resource-group $RESOURCEGROUP --name $APPNAME --storage-type AzureFiles --share-name $STORAGESHARENAME --account-name $STORAGEACCOUNT --access-key $STORAGEKEY --custom-id "${STORAGESHARENAME}" --mount-path "/themes"
 ```
 
 Finally we're going to increase the logging level of the web application.
