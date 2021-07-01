@@ -11,6 +11,7 @@ services:
       - "8224"
     volumes:
       - ${WEBAPP_STORAGE_HOME}/panintelligencekeys:/var/panintelligence/Dashboard/keys
+      - {CUSTOMID}:/var/panintelligence/Dashboard/tomcat/webapps/panMISDashboardResources/themes
     environment:
       - PI_DB_HOST={DATABASEHOST}
       - PI_DB_PORT=3306
