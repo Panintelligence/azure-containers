@@ -101,14 +101,15 @@ az mariadb server configuration set --resource-group $RESOURCEGROUP --server $DA
 
 ```bash
 
-python3 compose_build.py --host $DATABASEHOST --username $DATABASEUSERNAME --password $DATABASEPASSWORD --licence "$PANINTELLIGENCELICENCE" --customid $STORAGESHARENAME
+python3 compose_build.py --host $DATABASEHOST --username $DATABASEUSERNAME --password $DATABASEPASSWORD --licence "$PANINTELLIGENCELICENCE"
 
 az webapp create --resource-group $RESOURCEGROUP --plan $SERVICEPLAN --name $APPNAME --multicontainer-config-type COMPOSE --multicontainer-config-file docker-compose-panintelligence-separates.yml --docker-registry-server-user $DOCKERUSER --docker-registry-server-password $DOCKERPASSWORD
 
 az webapp config appsettings set --name $APPNAME --resource-group $RESOURCEGROUP --settings WEBSITES_ENABLE_APP_SERVICE_STORAGE=true
 az webapp config appsettings set --name $APPNAME --resource-group $RESOURCEGROUP --settings WEBSITES_CONTAINER_START_TIME_LIMIT=300
 az webapp config container set --docker-registry-server-url $DOCKERURL --docker-registry-server-password $DOCKERPASSWORD --docker-registry-server-user $DOCKERUSER --name $APPNAME --resource-group $RESOURCEGROUP
-az webapp config storage-account add --resource-group $RESOURCEGROUP --name $APPNAME --storage-type AzureFiles --share-name $STORAGESHARENAME --account-name $STORAGEACCOUNT --access-key $STORAGEKEY --custom-id "${STORAGESHARENAME}" --mount-path "/themes"
+az webapp config storage-account add --resource-group $RESOURCEGROUP --name $APPNAME --storage-type AzureFiles --share-name $STORAGESHARENAME --account-name $STORAGEACCOUNT --access-key $STORAGEKEY --custom-id "themes" --mount-path "/themes"
+az webapp config storage-account add --resource-group $RESOURCEGROUP --name $APPNAME --storage-type AzureFiles --share-name $STORAGESHARENAME --account-name $STORAGEACCOUNT --access-key $STORAGEKEY --custom-id "keys" --mount-path "/keys"
 ```
 
 Finally we're going to increase the logging level of the web application.
