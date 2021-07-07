@@ -108,7 +108,8 @@ az webapp create --resource-group $RESOURCEGROUP --plan $SERVICEPLAN --name $APP
 az webapp config appsettings set --name $APPNAME --resource-group $RESOURCEGROUP --settings WEBSITES_ENABLE_APP_SERVICE_STORAGE=true
 az webapp config appsettings set --name $APPNAME --resource-group $RESOURCEGROUP --settings WEBSITES_CONTAINER_START_TIME_LIMIT=300
 az webapp config container set --docker-registry-server-url $DOCKERURL --docker-registry-server-password $DOCKERPASSWORD --docker-registry-server-user $DOCKERUSER --name $APPNAME --resource-group $RESOURCEGROUP
-az webapp config storage-account add --resource-group $RESOURCEGROUP --name $APPNAME --storage-type AzureFiles --share-name $STORAGESHARENAME --account-name $STORAGEACCOUNT --access-key $STORAGEKEY --custom-id "${STORAGESHARENAME}" --mount-path "/themes"
+az webapp config storage-account add --resource-group $RESOURCEGROUP --name $APPNAME --storage-type AzureFiles --share-name $STORAGESHARENAME --account-name $STORAGEACCOUNT --access-key $STORAGEKEY --custom-id "themes" --mount-path "/themes"
+az webapp config storage-account add --resource-group $RESOURCEGROUP --name $APPNAME --storage-type AzureFiles --share-name $STORAGESHARENAME --account-name $STORAGEACCOUNT --access-key $STORAGEKEY --custom-id "keys" --mount-path "/keys"
 ```
 
 Finally we're going to increase the logging level of the web application.
