@@ -31,7 +31,6 @@ DOCKERURL=https://docker.io
 DOCKERUSER=<Your docker username>
 DOCKERPASSWORD=<Your docker password>
 PANINTELLIGENCELICENCE=<paste your licence here>
-CUSTOMID=$(openssl rand -base64 32)
 ```
 
 Next we're going to download our sample compose scripts from the panintelligence public github
