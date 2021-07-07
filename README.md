@@ -101,7 +101,7 @@ az mariadb server configuration set --resource-group $RESOURCEGROUP --server $DA
 
 ```bash
 
-python3 compose_build.py --host $DATABASEHOST --username $DATABASEUSERNAME --password $DATABASEPASSWORD --licence "$PANINTELLIGENCELICENCE" --customid $STORAGESHARENAME
+python3 compose_build.py --host $DATABASEHOST --username $DATABASEUSERNAME --password $DATABASEPASSWORD --licence "$PANINTELLIGENCELICENCE"
 
 az webapp create --resource-group $RESOURCEGROUP --plan $SERVICEPLAN --name $APPNAME --multicontainer-config-type COMPOSE --multicontainer-config-file docker-compose-panintelligence-separates.yml --docker-registry-server-user $DOCKERUSER --docker-registry-server-password $DOCKERPASSWORD
 

@@ -10,7 +10,6 @@ parser.add_argument('--host', dest='host', required=True)
 parser.add_argument('--username', dest='username', required=True)
 parser.add_argument('--password', dest='password', required=True)
 parser.add_argument('--licence', dest='licence', required=True)
-parser.add_argument('--customid', dest='customid', required=True)
 
 class MyFormatter(string.Formatter):
     def __init__(self, default='{{{0}}}'):
@@ -32,7 +31,7 @@ with open(source_path, 'r') as source_file:
 
 formatter = MyFormatter()    
 
-output = formatter.format(template, DATABASEHOST=cli_args.host, DATABASEUSERNAME=cli_args.username, DATABASEPASSWORD=cli_args.password, PANINTELLIGENCELICENCE=cli_args.licence, CUSTOMID=cli_args.customid)
+output = formatter.format(template, DATABASEHOST=cli_args.host, DATABASEUSERNAME=cli_args.username, DATABASEPASSWORD=cli_args.password, PANINTELLIGENCELICENCE=cli_args.licence)
 
 target_path = os.path.join(path, cli_args.target)
 
