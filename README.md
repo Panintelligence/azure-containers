@@ -4,6 +4,7 @@
 - You will need access to the panintelligence dockerhub projects.  Please contact your Business Success Manager
 - You will need experience with [docker compose](https://docs.docker.com/compose/)
 - You will need a licence
+- The [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli)
 
 ## Instructions
 
